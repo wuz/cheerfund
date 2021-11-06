@@ -1,0 +1,39 @@
+enum Gender {
+  BOY
+  GIRL
+}
+
+enum AgeType {
+  MONTH
+  YEAR
+}
+
+type Family {
+  primaryFirstName: String
+  primaryLastName: String
+  secondaryFirstName: String
+  secondaryLastName: String
+  address: String
+  aptNo: String
+  city: String
+  zip: String
+  phone1: String
+  phone2: String
+  children: [Child] @relation
+}
+
+type Child {
+  family: Family
+  firstName: String
+  lastName: String
+  gender: Gender
+  ageType: AgeType
+  age: Int
+  notes: String
+  school: String
+}
+
+type Query {
+  allChildren: [Child!]
+  allFamilies: [Family!]
+}
