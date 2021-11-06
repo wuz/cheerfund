@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Head from "next/head";
 import Link from "next/link";
@@ -14,9 +15,11 @@ import {
   Select,
   Space,
   Card,
+  Descriptions,
   Skeleton,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { Children } from "react/cjs/react.production.min";
 
 const { Title } = Typography;
 
@@ -27,13 +30,21 @@ const ALL_FAMILIES = gql`
         _id
         primaryFirstName
         primaryLastName
+        secondaryFirstName
+        secondaryLastName
+        children {
+          data {
+            age
+          }
+        }
       }
     }
   }
 `;
 
 export default function FamilyList() {
-  const { loading, error, data } = useQuery(ALL_FAMILIES);
+  const [search, setSearch] = useState("");
+  const { loading, data } = useQuery(ALL_FAMILIES);
   return (
     <div>
       <Head>
@@ -48,19 +59,54 @@ export default function FamilyList() {
         backIcon={false}
       />
       <Skeleton active loading={loading}>
-        {data?.allFamilies.data.map((family) => {
-          const { _id, primaryFirstName, primaryLastName } = family;
-          return (
-            <Card key={_id}>
-              <Title level={4}>
-                {primaryFirstName} {primaryLastName}
-              </Title>
-              <Link href={`/families/${_id}`}>
-                <Button>View Family</Button>
-              </Link>
-            </Card>
-          );
-        })}
+        <Space direction="vertical" style={{ width: "100%" }}>
+          <Input
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+            placeholder="Search for a family..."
+          />
+          {data?.allFamilies.data
+            .filter((family) => {
+              if (!search) {
+                return family;
+              }
+              return `${family.primaryFirstName}${family.primaryLastName}`
+                .toLowerCase()
+                .includes(search.toLowerCase());
+            })
+            .map((family) => {
+              const {
+                _id,
+                primaryFirstName,
+                primaryLastName,
+                secondaryFirstName,
+                secondaryLastName,
+                children,
+              } = family;
+              return (
+                <Card
+                  key={_id}
+                  actions={[
+                    <Link href={`/families/${_id}`} key="view">
+                      <Button>View Family</Button>
+                    </Link>,
+                  ]}
+                >
+                  <Title level={4}>
+                    {primaryFirstName} {primaryLastName}
+                  </Title>
+                  <Descriptions>
+                    <Descriptions.Item label="Secondary Adult">
+                      {secondaryFirstName} {secondaryLastName}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Number of children">
+                      {children.data.length}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              );
+            })}
+        </Space>
       </Skeleton>
     </div>
   );
