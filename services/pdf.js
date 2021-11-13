@@ -361,7 +361,7 @@ body {
   line-height: 1.5;
   background: #fff !important;
   color: #000;
-  margin: 1cm;
+  
 }
 
 main * + * {
@@ -374,6 +374,9 @@ h3 { font-size: 1.3em; }
 h4 { font-size: 1.2em; }
 h5 { font-size: 1.1em; }
 h6 { font-size: 1em; }
+.page {
+  margin: 1cm;
+}
 `;
 
 const makePDF = (component, res) => {

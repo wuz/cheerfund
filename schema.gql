@@ -40,4 +40,5 @@ type Query {
   allChildren: [Child!]
   allFamilies: [Family!]
   familiesByDeleted(deleted: Boolean!): [Family!]
+  familiesInRange(startDate: String!, endDate: String!): [Family!] @resolver(name: "find_family")
 }

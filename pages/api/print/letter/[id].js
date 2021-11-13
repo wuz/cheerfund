@@ -48,9 +48,6 @@ const handler = async (req, res) => {
   const component = (
     <div
       style={{
-        fontSize: "12px",
-        padding: "0.25in",
-        boxSizing: "border-box",
         height: "100%",
         width: "100%",
         position: "relative",

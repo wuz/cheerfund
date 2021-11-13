@@ -12,6 +12,7 @@ import {
   Skeleton,
   Descriptions,
 } from "antd";
+import dayjs from "dayjs";
 
 const { Text, Title } = Typography;
 const { confirm } = Modal;
@@ -31,6 +32,7 @@ const GET_FAMILIES = gql`
       phone1
       phone2
       deleted
+      createdAt
       children {
         data {
           _id
@@ -41,6 +43,7 @@ const GET_FAMILIES = gql`
           ageType
           notes
           school
+          createdAt
         }
       }
     }
@@ -48,8 +51,8 @@ const GET_FAMILIES = gql`
 `;
 
 const DELETE_FAMILY = gql`
-   mutation DeleteFamily($id: ID!) {
-     updateFamily(id: $id, data: { deleted: true}) {
+  mutation DeleteFamily($id: ID!) {
+    updateFamily(id: $id, data: { deleted: true }) {
       _id
     }
   }
@@ -70,6 +73,7 @@ export default function FamilyShow() {
   const { id } = router.query;
   const { loading, error, data } = useQuery(GET_FAMILIES, {
     variables: { id },
+    fetchPolicy: "no-cache",
   });
   const onCompleted = () => {
     router.push(`/families/list`);
@@ -100,6 +104,7 @@ export default function FamilyShow() {
     zip,
     phone1,
     phone2,
+    createdAt,
     children,
   } = data?.family;
   return (
@@ -112,19 +117,46 @@ export default function FamilyShow() {
 
       <PageHeader
         title={`${primaryFirstName} ${primaryLastName}`}
-        subTitle={`and ${secondaryFirstName} ${secondaryLastName}`}
+        subTitle={
+          <>
+            <strong>Created: </strong> {dayjs(createdAt).format("MMM DD, YYYY")}
+          </>
+        }
         backIcon={false}
         extra={[
-          <Button type="primary">Edit Family</Button>,
-          <Link href={`/families/print/${_id}`}>
-            <Button type="secondary">Print Family Sheets</Button>
+          <Link key="edit" href={`/families/edit/${_id}`}>
+            <Button type="primary">Edit Family</Button>
           </Link>,
-          <Button type="danger" onClick={confirmDelete}>Remove Family</Button>,
+          <a
+            key="full-sheet"
+            target="_blank"
+            rel="noreferrer"
+            href={`/api/print/full-sheet/${_id}`}
+          >
+            <Button type="secondary">Print Full Sheet</Button>
+          </a>,
+          <a
+            key="letter"
+            rel="noreferrer"
+            target="_blank"
+            href={`/api/print/letter/${_id}`}
+          >
+            <Button type="secondary">Print Letter</Button>
+          </a>,
+          <Button key="remove" type="danger" onClick={confirmDelete}>
+            Remove Family
+          </Button>,
         ]}
       />
       <Space direction="vertical">
         <Card key={_id}>
           <Descriptions title="Family Details">
+            <Descriptions.Item label="Primary Adult">
+              {primaryFirstName} {primaryLastName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Secondary Adult">
+              {secondaryFirstName} {secondaryLastName}
+            </Descriptions.Item>
             <Descriptions.Item label="Phone #1">{phone1}</Descriptions.Item>
             <Descriptions.Item label="Phone #2">{phone2}</Descriptions.Item>
             <Descriptions.Item label="Address">
