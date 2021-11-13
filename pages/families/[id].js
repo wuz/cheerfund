@@ -1,26 +1,20 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import Link from "next/link";
+import Head from "next/head";
 import {
-  Form,
   PageHeader,
-  Input,
   Button,
-  Checkbox,
   Typography,
-  Row,
-  Col,
-  Divider,
-  Select,
+  Modal,
   Space,
   Card,
   Skeleton,
   Descriptions,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 
 const { Text, Title } = Typography;
+const { confirm } = Modal;
 
 const GET_FAMILIES = gql`
   query GetFamilies($id: ID!) {
@@ -36,6 +30,7 @@ const GET_FAMILIES = gql`
       zip
       phone1
       phone2
+      deleted
       children {
         data {
           _id
@@ -48,6 +43,14 @@ const GET_FAMILIES = gql`
           school
         }
       }
+    }
+  }
+`;
+
+const DELETE_FAMILY = gql`
+   mutation DeleteFamily($id: ID!) {
+     updateFamily(id: $id, data: { deleted: true}) {
+      _id
     }
   }
 `;
@@ -68,6 +71,22 @@ export default function FamilyShow() {
   const { loading, error, data } = useQuery(GET_FAMILIES, {
     variables: { id },
   });
+  const onCompleted = () => {
+    router.push(`/families/list`);
+  };
+  const [deleteFamily] = useMutation(DELETE_FAMILY, {
+    onCompleted,
+  });
+  const confirmDelete = () => {
+    confirm({
+      title: "Are you sure you want to delete?",
+      onOk() {
+        deleteFamily({
+          variables: { id },
+        });
+      },
+    });
+  };
   if (loading || !data) return <Skeleton active loading={loading} />;
   const {
     _id,
@@ -95,6 +114,13 @@ export default function FamilyShow() {
         title={`${primaryFirstName} ${primaryLastName}`}
         subTitle={`and ${secondaryFirstName} ${secondaryLastName}`}
         backIcon={false}
+        extra={[
+          <Button type="primary">Edit Family</Button>,
+          <Link href={`/families/print/${_id}`}>
+            <Button type="secondary">Print Family Sheets</Button>
+          </Link>,
+          <Button type="danger" onClick={confirmDelete}>Remove Family</Button>,
+        ]}
       />
       <Space direction="vertical">
         <Card key={_id}>

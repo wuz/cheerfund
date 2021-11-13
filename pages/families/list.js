@@ -1,31 +1,25 @@
 import { useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
 import Head from "next/head";
 import Link from "next/link";
 import {
-  Form,
   PageHeader,
   Input,
   Button,
-  Checkbox,
   Typography,
-  Row,
-  Col,
-  Divider,
-  Select,
+  Modal,
   Space,
   Card,
   Descriptions,
   Skeleton,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { Children } from "react/cjs/react.production.min";
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 const ALL_FAMILIES = gql`
   query GetFamilies {
-    allFamilies {
+    families: familiesByDeleted(deleted: false) {
       data {
         _id
         primaryFirstName
@@ -42,9 +36,33 @@ const ALL_FAMILIES = gql`
   }
 `;
 
+const DELETE_FAMILY = gql`
+   mutation DeleteFamily($id: ID!) {
+     updateFamily(id: $id, data: { deleted: true}) {
+      _id
+    }
+  }
+`;
+
 export default function FamilyList() {
   const [search, setSearch] = useState("");
-  const { loading, data } = useQuery(ALL_FAMILIES);
+  const { loading, data, refetch } = useQuery(ALL_FAMILIES, { fetchPolicy: "no-cache" });
+  const onCompleted = () => {
+    refetch();
+  };
+  const [deleteFamily] = useMutation(DELETE_FAMILY, {
+    onCompleted,
+  });
+  const confirmDelete = (id) => () => {
+    confirm({
+      title: "Are you sure you want to delete?",
+      onOk() {
+        deleteFamily({
+          variables: { id },
+        });
+      },
+    });
+  };
   return (
     <div>
       <Head>
@@ -65,7 +83,7 @@ export default function FamilyList() {
             value={search}
             placeholder="Search for a family..."
           />
-          {data?.allFamilies.data
+          {data?.families.data
             .filter((family) => {
               if (!search) {
                 return family;
@@ -88,8 +106,9 @@ export default function FamilyList() {
                   key={_id}
                   actions={[
                     <Link href={`/families/${_id}`} key="view">
-                      <Button>View Family</Button>
+                      <Button type="primary">View Family</Button>
                     </Link>,
+                    <Button type="danger" onClick={confirmDelete(_id)}>Remove Family</Button>,
                   ]}
                 >
                   <Title level={4}>

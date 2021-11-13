@@ -14,10 +14,13 @@ import {
   Select,
   Space,
   Card,
+  Affix,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+import cities from "../../services/cities";
+
+const { Title, Text } = Typography;
 
 const CREATE_FAMILY = gql`
   mutation CreateFamily($data: FamilyInput!) {
@@ -35,12 +38,15 @@ export default function NewFamily() {
   const [createFamily] = useMutation(CREATE_FAMILY, {
     onCompleted,
   });
+  const [form] = Form.useForm();
   const onFinish = (values) => {
     const { children } = values;
     createFamily({
       variables: {
         data: {
           ...values,
+          zip: cities.find((c) => c.city === values.city).zip,
+          createdAt: new Date(),
           children: {
             create: children.map((child) => ({
               ...child,
@@ -106,12 +112,25 @@ export default function NewFamily() {
           </Col>
           <Col span={12}>
             <Form.Item label="City" name="city">
-              <Input />
+              <Select>
+                {cities.map(({ city }) => (
+                  <Select.Option value={city}>{city}</Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Zip Code" name="zip">
-              <Input />
+            <Form.Item
+              label="Zip"
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.city !== currentValues.city
+              }
+            >
+              {({ getFieldValue }) => {
+                const city = getFieldValue("city");
+                if (!city) return <Text secondary>Select a city</Text>;
+                return cities.find((c) => c.city === city).zip;
+              }}
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -234,9 +253,15 @@ export default function NewFamily() {
             </Row>
           )}
         </Form.List>
-        <Row>
-          <Button htmlType="submit">Save Family</Button>
-        </Row>
+        <Affix offsetBottom={10}>
+          <Card>
+            <Row align="center">
+              <Button size="large" htmlType="submit" type="primary">
+                Save Family
+              </Button>
+            </Row>
+          </Card>
+        </Affix>
       </Form>
     </div>
   );

@@ -20,6 +20,8 @@ type Family {
   phone1: String
   phone2: String
   children: [Child] @relation
+  deleted: Boolean
+  createdAt: Time!
 }
 
 type Child {
@@ -31,9 +33,11 @@ type Child {
   age: Int
   notes: String
   school: String
+  createdAt: Time!
 }
 
 type Query {
   allChildren: [Child!]
   allFamilies: [Family!]
+  familiesByDeleted(deleted: Boolean!): [Family!]
 }
