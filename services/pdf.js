@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import chromium from 'chrome-aws-lambda';
-import { chromium as devChromium } from "playwright";
+// import { chromium as devChromium } from "playwright";
 import playwright from 'playwright-core';
 
 import normalizeCSS from "./normalized";
@@ -13,15 +13,15 @@ async function printPDF(html, pdfOptions) {
   //       headless: chrome.headless
   //     };
   let browser;
-  if(process.env.NODE_ENV==="development") {
-    browser = await devChromium.launch({headless: true});
-  } else {
+  // if(process.env.NODE_ENV==="development") {
+  //   browser = await devChromium.launch({headless: true});
+  // } else {
     browser = await playwright.chromium.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath,
       headless: chromium.headless,
     })
-  }
+  // }
   if(!browser) return;
   const context = await browser.newContext();
   const page = await context.newPage();
