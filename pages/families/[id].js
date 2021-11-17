@@ -33,6 +33,14 @@ const GET_FAMILIES = gql`
       phone2
       deleted
       createdAt
+      otherAdults {
+        data {
+          _id
+          firstName
+          lastName
+          createdAt
+        }
+      }
       children {
         data {
           _id
@@ -52,7 +60,7 @@ const GET_FAMILIES = gql`
 
 const DELETE_FAMILY = gql`
   mutation DeleteFamily($id: ID!) {
-    updateFamily(id: $id, data: { deleted: true }) {
+    updateFamily(id: $id, data: { deleted: true, createdAt: "${(new Date()).toISOString()}" }) {
       _id
     }
   }
@@ -106,6 +114,7 @@ export default function FamilyShow() {
     phone2,
     createdAt,
     children,
+    otherAdults,
   } = data?.family;
   return (
     <div>
@@ -163,6 +172,16 @@ export default function FamilyShow() {
               {address}, {aptNo} {city}, {zip}
             </Descriptions.Item>
           </Descriptions>
+        </Card>
+        <Card>
+          <Title level={4}>Other Adults</Title>
+          {otherAdults.data.map((adult) => {
+            return (
+              <div>
+                {adult.firstName} {adult.lastName}
+              </div>
+            );
+          })}
         </Card>
         {children.data.map((child) => {
           return (

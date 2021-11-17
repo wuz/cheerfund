@@ -1,4 +1,3 @@
-const React = require('react');
 const makePDF = require("../../../services/pdf");
 const { GraphQLClient, gql } = require("graphql-request");
 
@@ -64,43 +63,38 @@ const handler = async (req, res) => {
     phone2,
     children,
   } = data.family;
-  const component = (
+  const component = `
     <main
-      style={{
-        height: "100%",
-        width: "100%",
-        position: "relative",
-      }}
-    >
+      style="height: 100%;width:100%;position:relative;">
       <h1>
-        {primaryFirstName} {primaryLastName}
+        ${primaryFirstName} ${primaryLastName}
       </h1>
       <h2>
-        {secondaryFirstName} {secondaryLastName}
+        ${secondaryFirstName} ${secondaryLastName}
       </h2>
       <address>
-        {address} {aptLotNo && `, ${aptLotNo}`}
+        ${address} ${aptLotNo ? ", aptLotNo" : ""}
         <br />
-        {city}, IN {zip}
+        ${city}, IN ${zip}
       </address>
-      <p>Phone #1: {phone1}</p>
-      {phone2 && <p>Phone #2: {phone2}</p>}
+      <p>Phone #1: ${phone1}</p>
+      ${phone2 ? `<p>Phone #2: ${phone2}</p>` : ""}
       <h2>Children</h2>
       <ul>
-        {children.data.map((child) => {
-          return (
-            <li key={child._id}>
+        ${children.data.map((child) => {
+          return `
+            <li>
               <strong>
-                {child.firstName} {child.lastName}
+                ${child.firstName} ${child.lastName}
               </strong>
               <br />
-              {toTitleCase(child.gender)} | {child.school}
+              ${toTitleCase(child.gender)} | ${child.school}
             </li>
-          );
-        })}
+          `;
+        }).join("\n")}
       </ul>
     </main>
-  );
+  `;
   makePDF(component, res);
 };
 

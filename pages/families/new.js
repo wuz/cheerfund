@@ -39,7 +39,7 @@ export default function NewFamily() {
     onCompleted,
   });
   const onFinish = (values) => {
-    const { children } = values;
+    const { children, otherAdults } = values;
     createFamily({
       variables: {
         data: {
@@ -47,6 +47,12 @@ export default function NewFamily() {
           zip: cities.find((c) => c.city === values.city).zip.toString(),
           createdAt: new Date(),
           deleted: false,
+          otherAdults: {
+            create: otherAdults.map((adult) => ({
+              ...adult,
+              createdAt: new Date(),
+            })),
+          },
           children: {
             create: children.map((child) => ({
               ...child,
@@ -89,12 +95,12 @@ export default function NewFamily() {
         <Title level={3}>Secondary Adult</Title>
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="First Name" name="secondaryFirstName" rules={[{ required: true }]}>
+            <Form.Item label="First Name" name="secondaryFirstName">
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Last Name" name="secondaryLastName" rules={[{ required: true }]}>
+            <Form.Item label="Last Name" name="secondaryLastName">
               <Input />
             </Form.Item>
           </Col>
@@ -146,10 +152,64 @@ export default function NewFamily() {
           </Col>
         </Row>
         <Divider />
+        <Form.List name="otherAdults">
+          {(fields, { add, remove }, { errors }) => (
+            <Row>
+              <Space direction="vertical" style={{width: '100%'}}>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  <Card
+                    key={key}
+                    actions={[
+                      <Button onClick={() => remove(name)} key="remove">
+                        Remove Other Adult
+                      </Button>,
+                    ]}
+                  >
+                    <Row gutter={24}>
+                      <Col span={12}>
+                        <Form.Item
+                          {...restField}
+                          label="First Name"
+                          name={[name, "firstName"]}
+                          fieldKey={[fieldKey, "firstName"]}
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          {...restField}
+                          label="Last Name"
+                          name={[name, "lastName"]}
+                          fieldKey={[fieldKey, "lastName"]}
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
+                ))}
+              </Space>
+              <Form.Item style={{ marginTop: "16px" }}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Other Adult
+                </Button>
+              </Form.Item>
+              <Divider />
+            </Row>
+          )}
+        </Form.List>
         <Form.List name="children">
           {(fields, { add, remove }, { errors }) => (
             <Row>
-              <Space direction="vertical">
+              <Space direction="vertical" style={{width: '100%'}}>
                 {fields.map(({ key, name, fieldKey, ...restField }) => (
                   <Card
                     key={key}

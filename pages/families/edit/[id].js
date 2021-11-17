@@ -40,6 +40,14 @@ const UPDATE_CHILD = gql`
   }
 `;
 
+const UPDATE_OTHER_ADULT = gql`
+  mutation UpdateOtherAdult($id: ID!, $data: OtherAdultInput!) {
+    updateOtherAdult(id: $id, data: $data) {
+      _id
+    }
+  }
+`;
+
 const GET_FAMILY = gql`
   query GetFamily($id: ID!) {
     family: findFamilyByID(id: $id) {
@@ -56,6 +64,14 @@ const GET_FAMILY = gql`
       phone2
       deleted
       createdAt
+      otherAdults {
+        data {
+          _id
+          firstName
+          lastName
+          createdAt
+        }
+      }
       children {
         data {
           _id
@@ -85,15 +101,22 @@ export default function EditFamily() {
     router.push(`/families/${data.updateFamily._id}`);
   };
   const [updateChild] = useMutation(UPDATE_CHILD);
+  const [updateOtherAdult] = useMutation(UPDATE_OTHER_ADULT);
   const [updateFamily] = useMutation(UPDATE_FAMILY, {
     onCompleted,
   });
   const onFinish = (values) => {
-    const { children } = values;
+    const { children, otherAdults } = values;
     const addedChildren = children.filter((child) => !child._id);
     const editedChildren = children.filter((child) => child._id);
     const removedChildren = data.family.children.data.filter(
       (child) => children.findIndex((c) => c._id === child._id) === -1
+    );
+
+    const addedOtherAdults = otherAdults.filter((adult) => !adult._id);
+    const editedOtherAdults = otherAdults.filter((adult) => adult._id);
+    const removedOtherAdults = data.family.otherAdults.data.filter(
+      (adult) => otherAdults.findIndex((c) => c._id === adult._id) === -1
     );
 
     editedChildren.forEach((child) => {
@@ -120,6 +143,30 @@ export default function EditFamily() {
         },
       });
     });
+
+    editedOtherAdults.forEach((adult) => {
+      updateOtherAdult({
+        variables: {
+          id: adult._id,
+          data: {
+            ...omit(adult, ["__typename", "_id"]),
+          },
+        },
+      });
+    });
+    removedOtherAdults.forEach((adult) => {
+      updateOtherAdult({
+        variables: {
+          id: adult._id,
+          data: {
+            ...omit(adult, ["__typename", "_id"]),
+            family: {
+              disconnect: true,
+            },
+          },
+        },
+      });
+    });
     updateFamily({
       variables: {
         id,
@@ -134,6 +181,12 @@ export default function EditFamily() {
               createdAt: new Date(),
             })),
           },
+          otherAdults: {
+            create: addedOtherAdults.map((adult) => ({
+              ...adult,
+              createdAt: new Date(),
+            })),
+          },
         },
       },
     });
@@ -142,6 +195,7 @@ export default function EditFamily() {
   const family = {
     ...data.family,
     children: data.family.children.data,
+    otherAdults: data.family.otherAdults.data,
   };
   return (
     <div>
@@ -231,6 +285,60 @@ export default function EditFamily() {
           </Col>
         </Row>
         <Divider />
+        <Form.List name="otherAdults">
+          {(fields, { add, remove }, { errors }) => (
+            <Row>
+              <Space direction="vertical" style={{width: '100%'}}>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  <Card
+                    key={key}
+                    actions={[
+                      <Button onClick={() => remove(name)} key="remove">
+                        Remove Other Adult
+                      </Button>,
+                    ]}
+                  >
+                    <Row gutter={24}>
+                      <Col span={12}>
+                        <Form.Item
+                          {...restField}
+                          label="First Name"
+                          name={[name, "firstName"]}
+                          fieldKey={[fieldKey, "firstName"]}
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          {...restField}
+                          label="Last Name"
+                          name={[name, "lastName"]}
+                          fieldKey={[fieldKey, "lastName"]}
+                          rules={[{ required: true }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
+                ))}
+              </Space>
+              <Form.Item style={{ marginTop: "16px" }}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Other Adult
+                </Button>
+              </Form.Item>
+              <Divider />
+            </Row>
+          )}
+        </Form.List>
         <Form.List name="children">
           {(fields, { add, remove }, { errors }) => (
             <Row>

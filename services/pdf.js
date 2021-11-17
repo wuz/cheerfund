@@ -1,4 +1,3 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import chromium from 'chrome-aws-lambda';
 import { chromium as devChromium } from "playwright";
 import playwright from 'playwright-core';

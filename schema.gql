@@ -20,7 +20,15 @@ type Family {
   phone1: String
   phone2: String
   children: [Child] @relation
+  otherAdults: [OtherAdult] @relation
   deleted: Boolean
+  createdAt: Time!
+}
+
+type OtherAdult {
+  family: Family,
+  firstName: String,
+  lastName: String,
   createdAt: Time!
 }
 
