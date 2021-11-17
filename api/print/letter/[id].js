@@ -1,4 +1,5 @@
-import makePDF from "../../../../services/pdf";
+import React from 'react';
+import makePDF from "../../services/pdf";
 import { GraphQLClient, gql } from "graphql-request";
 
 const graphQLClient = new GraphQLClient(

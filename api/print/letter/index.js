@@ -1,4 +1,5 @@
-import makePDF from "../../../../services/pdf";
+import React from 'react';
+import makePDF from "../../services/pdf";
 import { GraphQLClient, gql } from "graphql-request";
 
 const graphQLClient = new GraphQLClient(
@@ -70,41 +71,32 @@ const handler = async (req, res) => {
         } = family;
         return (
           <main
-            key={_id}
             style={{
               height: "100%",
               width: "100%",
               position: "relative",
             }}
+            key={_id}
             className="page"
           >
-            <h1>
-              {primaryFirstName} {primaryLastName}
-            </h1>
-            <h2>
-              {secondaryFirstName} {secondaryLastName}
-            </h2>
-            <address>
-              {address} {aptLotNo && `, ${aptLotNo}`}
-              <br />
-              {city}, IN {zip}
-            </address>
-            <p>Phone #1: {phone1}</p>
-            {phone2 && <p>Phone #2: {phone2}</p>}
-            <h2>Children</h2>
-            <ul>
-              {children.data.map((child) => {
-                return (
-                  <li key={child._id}>
-                    <strong>
-                      {child.firstName} {child.lastName}
-                    </strong>
-                    <br />
-                    {toTitleCase(child.gender)} | {child.school}
-                  </li>
-                );
-              })}
-            </ul>
+            <p>
+              Hello {primaryFirstName} {primaryLastName},
+            </p>
+            <div
+              style={{
+                fontSize: "40px",
+                fontWeight: "700",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                "-webkit-transform": "translate(-50%, -50%) rotate(-20deg)",
+                boxSizing: "border-box",
+                opacity: "0.5",
+                color: "#02B8F2",
+              }}
+            >
+              CHEERFUND
+            </div>
           </main>
         );
       })}
