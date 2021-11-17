@@ -1,6 +1,6 @@
-import React from 'react';
-import makePDF from "../../../services/pdf";
-import { GraphQLClient, gql } from "graphql-request";
+const React = require('react');
+const makePDF = require("../../../services/pdf");
+const { GraphQLClient, gql } = require("graphql-request");
 
 const graphQLClient = new GraphQLClient(
   "https://graphql.us.fauna.com/graphql",
@@ -104,4 +104,4 @@ const handler = async (req, res) => {
   makePDF(component, res);
 };
 
-export default handler;
+module.exports = handler;

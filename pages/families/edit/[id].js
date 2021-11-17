@@ -126,6 +126,7 @@ export default function EditFamily() {
         data: {
           ...omit(values, ["_id", "__typename", "children"]),
           zip: cities.find((c) => c.city === values.city).zip.toString(),
+          createdAt: family.createdAt,
           children: {
             create: addedChildren.map((child) => ({
               ...child,
@@ -159,12 +160,12 @@ export default function EditFamily() {
         <Title level={3}>Primary Adult</Title>
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="First Name" name="primaryFirstName">
+            <Form.Item label="First Name" name="primaryFirstName" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Last Name" name="primaryLastName">
+            <Form.Item label="Last Name" name="primaryLastName" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -173,7 +174,7 @@ export default function EditFamily() {
         <Title level={3}>Secondary Adult</Title>
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="First Name" name="secondaryFirstName">
+            <Form.Item label="First Name" name="secondaryFirstName" >
               <Input />
             </Form.Item>
           </Col>
@@ -186,7 +187,7 @@ export default function EditFamily() {
         <Divider />
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="Address" name="address">
+            <Form.Item label="Address" name="address" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -196,7 +197,7 @@ export default function EditFamily() {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="City" name="city">
+            <Form.Item label="City" name="city" rules={[{ required: true }]}>
               <Select showSearch>
                 {cities.map(({ city }) => (
                   <Select.Option value={city}>{city}</Select.Option>
@@ -219,7 +220,7 @@ export default function EditFamily() {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Phone #1" name="phone1">
+            <Form.Item label="Phone #1" name="phone1" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -250,6 +251,7 @@ export default function EditFamily() {
                           label="First Name"
                           name={[name, "firstName"]}
                           fieldKey={[fieldKey, "firstName"]}
+                          rules={[{ required: true }]}
                         >
                           <Input />
                         </Form.Item>
@@ -260,6 +262,7 @@ export default function EditFamily() {
                           label="Last Name"
                           name={[name, "lastName"]}
                           fieldKey={[fieldKey, "lastName"]}
+                          rules={[{ required: true }]}
                         >
                           <Input />
                         </Form.Item>
@@ -270,6 +273,7 @@ export default function EditFamily() {
                           label="Gender"
                           name={[name, "gender"]}
                           fieldKey={[fieldKey, "gender"]}
+                          rules={[{ required: true }]}
                         >
                           <Select showSearch>
                             <Select.Option value="BOY">Boy</Select.Option>
@@ -293,6 +297,7 @@ export default function EditFamily() {
                           label="Age"
                           name={[name, "age"]}
                           fieldKey={[fieldKey, "age"]}
+                          rules={[{ required: true }]}
                         >
                           <Input type="number" />
                         </Form.Item>
@@ -303,8 +308,9 @@ export default function EditFamily() {
                           label="Years/Months"
                           name={[name, "ageType"]}
                           fieldKey={[fieldKey, "ageType"]}
+                          rules={[{ required: true }]}
                         >
-                          <Select defaultValue="years" showSearch>
+                          <Select showSearch>
                             <Select.Option value="YEAR">Years</Select.Option>
                             <Select.Option value="MONTH">Months</Select.Option>
                           </Select>

@@ -38,7 +38,6 @@ export default function NewFamily() {
   const [createFamily] = useMutation(CREATE_FAMILY, {
     onCompleted,
   });
-  const [form] = Form.useForm();
   const onFinish = (values) => {
     const { children } = values;
     createFamily({
@@ -76,12 +75,12 @@ export default function NewFamily() {
         <Title level={3}>Primary Adult</Title>
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="First Name" name="primaryFirstName">
+            <Form.Item label="First Name" name="primaryFirstName" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Last Name" name="primaryLastName">
+            <Form.Item label="Last Name" name="primaryLastName" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -90,12 +89,12 @@ export default function NewFamily() {
         <Title level={3}>Secondary Adult</Title>
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="First Name" name="secondaryFirstName">
+            <Form.Item label="First Name" name="secondaryFirstName" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Last Name" name="secondaryLastName">
+            <Form.Item label="Last Name" name="secondaryLastName" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -103,7 +102,7 @@ export default function NewFamily() {
         <Divider />
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="Address" name="address">
+            <Form.Item label="Address" name="address" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -113,7 +112,7 @@ export default function NewFamily() {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="City" name="city">
+            <Form.Item label="City" name="city" rules={[{ required: true }]}>
               <Select showSearch>
                 {cities.map(({ city }) => (
                   <Select.Option value={city}>{city}</Select.Option>
@@ -136,7 +135,7 @@ export default function NewFamily() {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Phone #1" name="phone1">
+            <Form.Item label="Phone #1" name="phone1" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
@@ -167,6 +166,7 @@ export default function NewFamily() {
                           label="First Name"
                           name={[name, "firstName"]}
                           fieldKey={[fieldKey, "firstName"]}
+                          rules={[{ required: true }]}
                         >
                           <Input />
                         </Form.Item>
@@ -177,6 +177,7 @@ export default function NewFamily() {
                           label="Last Name"
                           name={[name, "lastName"]}
                           fieldKey={[fieldKey, "lastName"]}
+                          rules={[{ required: true }]}
                         >
                           <Input />
                         </Form.Item>
@@ -187,6 +188,7 @@ export default function NewFamily() {
                           label="Gender"
                           name={[name, "gender"]}
                           fieldKey={[fieldKey, "gender"]}
+                          rules={[{ required: true }]}
                         >
                           <Select showSearch>
                             <Select.Option value="BOY">Boy</Select.Option>
@@ -200,6 +202,7 @@ export default function NewFamily() {
                           label="School"
                           name={[name, "school"]}
                           fieldKey={[fieldKey, "school"]}
+                          rules={[{ required: true }]}
                         >
                           <Input />
                         </Form.Item>
@@ -210,6 +213,7 @@ export default function NewFamily() {
                           label="Age"
                           name={[name, "age"]}
                           fieldKey={[fieldKey, "age"]}
+                          rules={[{ required: true }]}
                         >
                           <Input type="number" />
                         </Form.Item>
@@ -220,8 +224,9 @@ export default function NewFamily() {
                           label="Years/Months"
                           name={[name, "ageType"]}
                           fieldKey={[fieldKey, "ageType"]}
+                          rules={[{ required: true }]}
                         >
-                          <Select defaultValue="years" showSearch>
+                          <Select showSearch>
                             <Select.Option value="YEAR">Years</Select.Option>
                             <Select.Option value="MONTH">Months</Select.Option>
                           </Select>
