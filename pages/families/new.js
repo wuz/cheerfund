@@ -47,6 +47,7 @@ export default function NewFamily() {
           ...values,
           zip: cities.find((c) => c.city === values.city).zip.toString(),
           createdAt: new Date(),
+          deleted: false,
           children: {
             create: children.map((child) => ({
               ...child,
