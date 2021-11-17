@@ -78,9 +78,9 @@ const handler = async (req, res) => {
             key={_id}
             className="page"
           >
-            <h1>
+            <p>
               Hello {primaryFirstName} {primaryLastName},
-            </h1>
+            </p>
             <div
               style={{
                 fontSize: "40px",

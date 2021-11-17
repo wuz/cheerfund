@@ -358,7 +358,7 @@ body {
   line-height: 1.5;
   background: #fff !important;
   color: #000;
-  
+  padding: 2em;
 }
 
 main * + * {

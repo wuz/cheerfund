@@ -53,9 +53,9 @@ const handler = async (req, res) => {
         position: "relative",
       }}
     >
-      <h1>
+      <p>
         Hello {primaryFirstName} {primaryLastName},
-      </h1>
+      </p>
       <div
         style={{
           fontSize: "40px",
