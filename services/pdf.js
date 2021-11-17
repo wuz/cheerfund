@@ -1,13 +1,32 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import puppeteer from "puppeteer";
+import chromium from 'chrome-aws-lambda';
+import { chromium as devChromium } from "playwright";
+import playwright from 'playwright-core';
 
 import normalizeCSS from "./normalized";
  
-async function printPDF(html, options) {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+async function printPDF(html, pdfOptions) {
+  // const options = process.env.AWS_REGION
+  //   ? {
+  //       args: chrome.args,
+  //       executablePath: await chrome.executablePath,
+  //       headless: chrome.headless
+  //     };
+  let browser;
+  if(process.env.NODE_ENV==="development") {
+    browser = await devChromium.launch({headless: true});
+  } else {
+    browser = await playwright.chromium.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+    })
+  }
+  if(!browser) return;
+  const context = await browser.newContext();
+  const page = await context.newPage();
   await page.setContent(html);
-  const pdf = await page.pdf(options);
+  const pdf = await page.pdf(pdfOptions);
  
   await browser.close();
   return pdf;

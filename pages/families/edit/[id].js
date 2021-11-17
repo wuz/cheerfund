@@ -197,7 +197,7 @@ export default function EditFamily() {
           </Col>
           <Col span={12}>
             <Form.Item label="City" name="city">
-              <Select>
+              <Select showSearch>
                 {cities.map(({ city }) => (
                   <Select.Option value={city}>{city}</Select.Option>
                 ))}
@@ -271,7 +271,7 @@ export default function EditFamily() {
                           name={[name, "gender"]}
                           fieldKey={[fieldKey, "gender"]}
                         >
-                          <Select>
+                          <Select showSearch>
                             <Select.Option value="BOY">Boy</Select.Option>
                             <Select.Option value="GIRL">Girl</Select.Option>
                           </Select>
@@ -304,7 +304,7 @@ export default function EditFamily() {
                           name={[name, "ageType"]}
                           fieldKey={[fieldKey, "ageType"]}
                         >
-                          <Select defaultValue="years">
+                          <Select defaultValue="years" showSearch>
                             <Select.Option value="YEAR">Years</Select.Option>
                             <Select.Option value="MONTH">Months</Select.Option>
                           </Select>
