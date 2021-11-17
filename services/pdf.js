@@ -1,4 +1,3 @@
-import pdf from "html-pdf";
 import { renderToStaticMarkup } from "react-dom/server";
 import puppeteer from "puppeteer";
 
