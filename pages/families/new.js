@@ -47,12 +47,12 @@ export default function NewFamily() {
           zip: cities.find((c) => c.city === values.city).zip.toString(),
           createdAt: new Date(),
           deleted: false,
-          otherAdults: {
+          otherAdults: otherAdults.length > 0 ? {
             create: otherAdults.map((adult) => ({
               ...adult,
               createdAt: new Date(),
             })),
-          },
+          } : {},
           children: {
             create: children.map((child) => ({
               ...child,
