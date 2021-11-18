@@ -47,7 +47,7 @@ export default function NewFamily() {
           zip: cities.find((c) => c.city === values.city).zip.toString(),
           createdAt: new Date(),
           deleted: false,
-          otherAdults: otherAdults.length > 0 ? {
+          otherAdults: otherAdults?.length > 0 ? {
             create: otherAdults.map((adult) => ({
               ...adult,
               createdAt: new Date(),
