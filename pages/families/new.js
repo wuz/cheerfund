@@ -40,27 +40,32 @@ export default function NewFamily() {
   });
   const onFinish = (values) => {
     const { children, otherAdults } = values;
+    const familyData = {
+      ...values,
+      zip: cities.find((c) => c.city === values.city).zip.toString(),
+      createdAt: new Date(),
+      deleted: false
+    }
+    if(otherAdults?.length > 0) {
+      familyData.otherAdults = {
+        create: otherAdults.map((adult) => ({
+          ...adult,
+          createdAt: new Date(),
+        }))
+      };
+    }
+    if(children?.length > 0) {
+      familyData.children = {
+        create: children.map((child) => ({
+          ...child,
+          age: Number(child.age),
+          createdAt: new Date(),
+        })),
+      }
+    }
     createFamily({
       variables: {
-        data: {
-          ...values,
-          zip: cities.find((c) => c.city === values.city).zip.toString(),
-          createdAt: new Date(),
-          deleted: false,
-          otherAdults: otherAdults?.length > 0 ? {
-            create: otherAdults.map((adult) => ({
-              ...adult,
-              createdAt: new Date(),
-            })),
-          } : {},
-          children: {
-            create: children.map((child) => ({
-              ...child,
-              age: Number(child.age),
-              createdAt: new Date(),
-            })),
-          },
-        },
+        data: familyData,
       },
     });
   };
