@@ -96,7 +96,7 @@ export default function FamilyList() {
           {chosenDate && (
             <>
               <a target="_blank" href={`/api/print/full-sheet?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
-              <a target="_blank" href={`/api/print/letter?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
+              <a target="_blank" href={`/api/print/letter?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Letters</Button></a>
             </>
           )}
         </Space>
