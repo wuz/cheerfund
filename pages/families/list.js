@@ -12,7 +12,9 @@ import {
   Card,
   Descriptions,
   Skeleton,
+  DatePicker
 } from "antd";
+import dayjs from "dayjs";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -46,6 +48,8 @@ const DELETE_FAMILY = gql`
 
 export default function FamilyList() {
   const [search, setSearch] = useState("");
+  const [chosenDate, setChosenDate] = useState(null);
+  const [printModalOpen, setPrintModalOpen] = useState(false);
   const { loading, data, refetch } = useQuery(ALL_FAMILIES, { fetchPolicy: "no-cache" });
   const onCompleted = () => {
     refetch();
@@ -81,10 +85,20 @@ export default function FamilyList() {
           </a>,
           <a href="/api/kids-list" download>
             <Button type="primary">Download Kids List</Button>
-          </a>
+          </a>,
+          <Button type="primary" onClick={() => setPrintModalOpen(true)}>Print</Button>
         ]
         }
       />
+      <Modal title="Print between..." visible={printModalOpen} onCancel={() => setPrintModalOpen(false)} footer={[
+        <Space>
+          <Button onClick={() => setPrintModalOpen(false)} type="ghost">Cancel</Button>
+          <a target="_blank" href={`/api/print/full-sheet?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
+          <a target="_blank" href={`/api/print/letter?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
+        </Space>
+      ]}>
+        <DatePicker.RangePicker format="MM/DD/YYYY" value={chosenDate} onChange={(value) => setChosenDate(value)} />
+      </Modal>
       <Skeleton active loading={loading}>
         <Space direction="vertical" style={{ width: "100%" }}>
           <Input
@@ -136,6 +150,6 @@ export default function FamilyList() {
             })}
         </Space>
       </Skeleton>
-    </div>
+    </div >
   );
 }
