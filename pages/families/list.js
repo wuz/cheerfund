@@ -93,8 +93,12 @@ export default function FamilyList() {
       <Modal title="Print between..." visible={printModalOpen} onCancel={() => setPrintModalOpen(false)} footer={[
         <Space>
           <Button onClick={() => setPrintModalOpen(false)} type="ghost">Cancel</Button>
-          <a target="_blank" href={`/api/print/full-sheet?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
-          <a target="_blank" href={`/api/print/letter?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
+          {chosenDate && (
+            <>
+              <a target="_blank" href={`/api/print/full-sheet?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
+              <a target="_blank" href={`/api/print/letter?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
+            </>
+          )}
         </Space>
       ]}>
         <DatePicker.RangePicker format="MM/DD/YYYY" value={chosenDate} onChange={(value) => setChosenDate(value)} />
