@@ -1,4 +1,4 @@
-const makePDF = require("../../../services/pdf");
+const makePDF = require("../../../services/pdf").default;
 const { GraphQLClient, gql } = require("graphql-request");
 
 const graphQLClient = new GraphQLClient(
@@ -51,6 +51,7 @@ const handler = async (req, res) => {
   const { id } = req.query;
   const data = await graphQLClient.request(GET_FAMILIES, { id });
   const {
+    _id,
     primaryFirstName,
     primaryLastName,
     secondaryFirstName,
@@ -66,6 +67,7 @@ const handler = async (req, res) => {
   const component = `
     <main
       style="height: 100%;width:100%;position:relative;">
+      <h3>Key: ${`${primaryFirstName.substr(0, 3)}${primaryLastName.substr(0, 3)}${_id.slice(-2)}`.toLowerCase()}</h3>
       <h1>
         ${primaryFirstName} ${primaryLastName}
       </h1>
@@ -79,19 +81,21 @@ const handler = async (req, res) => {
       </address>
       <p>Phone #1: ${phone1}</p>
       ${phone2 ? `<p>Phone #2: ${phone2}</p>` : ""}
+      <h3>Food for: __________</h3>
       <h2>Children</h2>
       <ul>
         ${children.data.map((child) => {
-          return `
+    return `
             <li>
               <strong>
                 ${child.firstName} ${child.lastName}
               </strong>
               <br />
-              ${toTitleCase(child.gender)} | ${child.school}
+              ${toTitleCase(child.gender)} | ${child.school}<br /><br />
+              ${child.notes ?? ""}
             </li>
           `;
-        }).join("\n")}
+  }).join("\n")}
       </ul>
     </main>
   `;

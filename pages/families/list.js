@@ -75,6 +75,15 @@ export default function FamilyList() {
         title="All Families"
         subTitle="List of families"
         backIcon={false}
+        extra={[
+          <a href="/api/full-list" download>
+            <Button type="primary">Download Full List</Button>
+          </a>,
+          <a href="/api/kids-list" download>
+            <Button type="primary">Download Kids List</Button>
+          </a>
+        ]
+        }
       />
       <Skeleton active loading={loading}>
         <Space direction="vertical" style={{ width: "100%" }}>

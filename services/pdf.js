@@ -3,11 +3,11 @@ import { chromium as devChromium } from "playwright";
 import playwright from 'playwright-core';
 
 import normalizeCSS from "./normalized";
- 
+
 async function printPDF(html, pdfOptions) {
   let browser;
-  if(process.env.NODE_ENV==="development") {
-    browser = await devChromium.launch({headless: true});
+  if (process.env.NODE_ENV === "development") {
+    browser = await devChromium.launch({ headless: true });
   } else {
     browser = await playwright.chromium.launch({
       args: chromium.args,
@@ -15,24 +15,24 @@ async function printPDF(html, pdfOptions) {
       headless: chromium.headless,
     })
   }
-  if(!browser) return;
+  if (!browser) return;
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.setContent(html);
   const pdf = await page.pdf(pdfOptions);
- 
+
   await browser.close();
   return pdf;
 };
 
-const makePDF = async (component, res) => {
+const makePDF = async (content, res) => {
   const html = `
     <html>
     <head>
       <style>${normalizeCSS}</style>
     </head>
       <body>
-        ${renderToStaticMarkup(component)}
+        ${content}
       </body>
     </html>
   `;
