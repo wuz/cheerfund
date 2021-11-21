@@ -358,7 +358,6 @@ body {
   line-height: 1.5;
   background: #fff !important;
   color: #000;
-  padding: 6em;
 }
 
 main * + * {
@@ -372,7 +371,8 @@ h4 { font-size: 1.2em; }
 h5 { font-size: 1.1em; }
 h6 { font-size: 1em; }
 .page {
-  margin: 1cm;
+  page-break-after: always;
+  padding: 6em;
 }
 `;
 
