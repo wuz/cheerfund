@@ -31,6 +31,12 @@ const GET_FAMILIES = gql`
       phone1
       phone2
       deleted
+      otherAdults {
+        data {
+          firstName
+          lastName
+        }
+      }
       children {
         data {
           _id
@@ -63,6 +69,7 @@ const handler = async (req, res) => {
     phone1,
     phone2,
     children,
+    otherAdults
   } = data.family;
   const component = `
     <main
@@ -82,6 +89,18 @@ const handler = async (req, res) => {
       <p>Phone #1: ${phone1}</p>
       ${phone2 ? `<p>Phone #2: ${phone2}</p>` : ""}
       <h3>Food for: __________</h3>
+      <h2>Other Adults</h2>
+      <ul>
+        ${otherAdults.data.map((adult) => {
+    return `
+            <li>
+              <strong>
+                ${adult.firstName} ${adult.lastName}
+              </strong>
+            </li>
+          `;
+  }).join("\n")}
+      </ul>
       <h2>Children</h2>
       <ul>
         ${children.data.map((child) => {
