@@ -52,7 +52,7 @@ const GET_FAMILIES = gql`
 
 const handler = async (req, res) => {
   const data = await graphQLClient.request(GET_FAMILIES);
-  const headers = ["Key", "Primary First", "Primary Last", "Secondary First", "Secondary Last", "Address", "Phone 1", "Phone 2", "Children Count"].join(",");
+  const headers = ["Key", "Primary First", "Primary Last", "Secondary First", "Secondary Last", "Address", "City", "State", "Zip", "Phone 1", "Phone 2", "Children Count"].join(",");
   const rows = data.familiesByDeleted.data.map((family) => {
     return [
       `${family.primaryFirstName.substr(0, 3)}${family.primaryLastName.substr(0, 3)}${family._id.slice(-2)}`.toLowerCase(),
@@ -60,7 +60,10 @@ const handler = async (req, res) => {
       family.primaryLastName,
       family.secondaryFirstName,
       family.secondaryLastName,
-      `"${family.address}${family.aptNo ? ` ${family.aptNo}` : ""}, ${family.city} ${family.zip}"`,
+      `"${family.address}${family.aptNo ? ` ${family.aptNo}` : ""}"`,
+      family.city,
+      "IN",
+      family.zip,
       family.phone1,
       family.phone2,
       family.children?.data?.length || 0

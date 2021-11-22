@@ -104,7 +104,7 @@ const handler = async (req, res) => {
                 ${child.firstName} ${child.lastName}
               </strong>
               <br />
-              ${toTitleCase(child.gender)} | ${child.school}<br /><br />
+              ${toTitleCase(child.gender)} | ${child.school} | ${child.age} ${toTitleCase(child.ageType)}s<br /><br />
               ${child.notes ?? ""}
             </li>
           `;

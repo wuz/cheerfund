@@ -101,7 +101,8 @@ const handler = async (req, res) => {
         The Cheer Fund hopes to operate as normal in 2022. This year’s change was made to help keep everyone in Decatur County safe and healthy.<br /><br />
         If you have questions, please address those to DailyNewsCheerFund@gmail.com or call 812.663.3111 ext.217804. <br /><br />
         Please know that the Cheer Fund Committee volunteers wish you and yours a Merry Christmas and a Happy New Year! May 2022 bring blessings upon you!<br /><br />
-        The Cheer Fund Committee
+
+        The Greensburg Daily News Cheer Fund Committee
       </p>
       <div
         style="${styleString({
