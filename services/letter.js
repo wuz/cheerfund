@@ -11,6 +11,8 @@ export default (primaryFirstName, primaryLastName) => `
     position: "relative",
 })}"
     >
+      <h3 style="margin:0;text-align:center;">Greensburg Daily News</h3>
+      <h1 style="color: red;margin-top:0;font-size:32px;text-align:center;">CHEER FUND</h1>
       <p>
         Dear ${primaryFirstName} ${primaryLastName},<br /><br />
         Your application for assistance from the Cheer Fund for 2021 has been received and approved.<br /> <br />
@@ -50,7 +52,7 @@ export default (primaryFirstName, primaryLastName) => `
     fontSize: "80px",
     fontWeight: "700",
     position: "absolute",
-    top: "30%",
+    top: "40%",
     left: "50%",
     "-webkit-transform": "translate(-50%, -50%) rotate(-20deg)",
     boxSizing: "border-box",
