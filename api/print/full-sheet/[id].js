@@ -73,6 +73,7 @@ const handler = async (req, res) => {
   } = data.family;
   const component = `
     <main
+    class="page"
       style="height: 100%;width:100%;position:relative;">
       <h3>Key: ${`${primaryFirstName.substr(0, 3)}${primaryLastName.substr(0, 3)}${_id.slice(-2)}`.toLowerCase()}</h3>
       <h1>
