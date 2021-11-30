@@ -11,7 +11,7 @@ export default (primaryFirstName, primaryLastName) => `
   position: "relative",
 })}"
     >
-      <p>
+      <p style="margin-top:5em">
         Dear ${primaryFirstName} ${primaryLastName},<br /><br />
         Your application for assistance from the Cheer Fund for 2021 has been received and approved.<br /> <br />
 

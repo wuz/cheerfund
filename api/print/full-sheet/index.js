@@ -85,9 +85,9 @@ const handler = async (req, res) => {
       <h1>
         ${primaryFirstName} ${primaryLastName}
       </h1>
-      <h2>
+      ${secondaryFirstName || secondaryFirstName ? (`<h2>
         ${secondaryFirstName} ${secondaryLastName}
-      </h2>
+      </h2>`) : ""}
       <address>
         ${address} ${aptLotNo ? ", aptLotNo" : ""}
         <br />
@@ -98,7 +98,7 @@ const handler = async (req, res) => {
       <h3>Food for: __________</h3>
       <h2>Other Adults</h2>
       <ul>
-        ${otherAdults.data.map((adult) => {
+        ${otherAdults?.length > 0 ? otherAdults.data.map((adult) => {
       return `
             <li>
               <strong>
@@ -106,7 +106,7 @@ const handler = async (req, res) => {
               </strong>
             </li>
           `;
-    }).join("\n")}
+    }).join("\n") : ""}
       </ul>
       <h2>Children</h2>
       <ul>

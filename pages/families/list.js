@@ -80,28 +80,23 @@ export default function FamilyList() {
         subTitle="List of families"
         backIcon={false}
         extra={[
-          <a href="/api/full-list" download>
-            <Button type="primary">Download Full List</Button>
-          </a>,
-          <a href="/api/kids-list" download>
-            <Button type="primary">Download Kids List</Button>
-          </a>,
-          <Button type="primary" onClick={() => setPrintModalOpen(true)}>Print</Button>
+          <Button type="primary" onClick={() => setPrintModalOpen(true)}>Print/Download</Button>
         ]
         }
       />
-      <Modal title="Print between..." visible={printModalOpen} onCancel={() => setPrintModalOpen(false)} footer={[
-        <Space>
-          <Button onClick={() => setPrintModalOpen(false)} type="ghost">Cancel</Button>
+      <Modal title="Print/Download between..." style={{ width: "50vw" }} visible={printModalOpen} footer={[<Button onClick={() => setPrintModalOpen(false)} type="ghost">Cancel</Button>
+      ]} onCancel={() => setPrintModalOpen(false)}>
+        <DatePicker.RangePicker format="MM/DD/YYYY" value={chosenDate} onChange={(value) => setChosenDate(value)} />
+        <Space wrap style={{ marginTop: '20px' }}>
           {chosenDate && (
             <>
               <a target="_blank" href={`/api/print/full-sheet?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Full Sheets</Button></a>
               <a target="_blank" href={`/api/print/letter?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Print Letters</Button></a>
+              <a target="_blank" href={`/api/kids-list?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Download Kids List</Button></a>
+              <a target="_blank" href={`/api/full-list?from=${dayjs(chosenDate[0]).format("MM/DD/YYYY")}&to=${dayjs(chosenDate[1]).format("MM/DD/YYYY")}`}><Button type="primary">Download Full List</Button></a>
             </>
           )}
         </Space>
-      ]}>
-        <DatePicker.RangePicker format="MM/DD/YYYY" value={chosenDate} onChange={(value) => setChosenDate(value)} />
       </Modal>
       <Skeleton active loading={loading}>
         <Space direction="vertical" style={{ width: "100%" }}>
