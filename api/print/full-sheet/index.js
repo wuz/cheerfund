@@ -23,7 +23,7 @@ function toTitleCase(str) {
 
 const GET_FAMILIES = gql`
   query GetFamilies {
-    allFamilies: familiesByDeleted(deleted: false) {
+    allFamilies: familiesByDeleted(deleted: false, _size: 1000) {
       data {
         _id
         primaryFirstName

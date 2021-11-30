@@ -14,7 +14,7 @@ const graphQLClient = new GraphQLClient(
 
 const GET_FAMILIES = gql`
   query GetFamilies {
-    familiesByDeleted(deleted: false) {
+    familiesByDeleted(deleted: false, _size: 1000) {
       data {
         _id
         primaryFirstName

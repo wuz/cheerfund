@@ -21,7 +21,7 @@ const { confirm } = Modal;
 
 const ALL_FAMILIES = gql`
   query GetFamilies {
-    families: familiesByDeleted(deleted: false) {
+    families: familiesByDeleted(deleted: false, _size: 1000) {
       data {
         _id
         primaryFirstName
