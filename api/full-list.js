@@ -53,10 +53,12 @@ const GET_FAMILIES = gql`
 `;
 
 const handler = async (req, res) => {
-  const { from = dayjs(), to = dayjs() } = req.query;
+  const { from, to } = req.query;
+  const toDay = dayjs(to).endOf('day');
+  const fromDay = dayjs(from).startOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
   const headers = ["Key", "Primary First", "Primary Last", "Secondary First", "Secondary Last", "Address", "City", "State", "Zip", "Phone 1", "Phone 2", "Children Count", "Created At"].join(",");
-  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt).isBetween(from, to)).map((family) => {
+  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
     return [
       `${family.primaryFirstName.substr(0, 3)}${family.primaryLastName.substr(0, 3)}${family._id.slice(-2)}`.toLowerCase(),
       family.primaryFirstName,
@@ -70,7 +72,7 @@ const handler = async (req, res) => {
       family.phone1,
       family.phone2,
       family.children?.data?.length || 0,
-      dayjs(family.createdAt).format("MMM DD YYYY")
+      dayjs(family.createdAt.slice(0, 10)).format("MMM DD YYYY")
     ].join(",");
   }).join("\n");
   res.setHeader("Content-Type", "text/csv");

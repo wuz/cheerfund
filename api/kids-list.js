@@ -58,10 +58,12 @@ const genderToString = {
 }
 
 const handler = async (req, res) => {
-  const { from = dayjs(), to = dayjs() } = req.query;
+  const { from, to } = req.query;
+  const toDay = dayjs(to).endOf('day');
+  const fromDay = dayjs(from).startOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
   const headers = ["Key", "First Name", "Last Name", "Gender", "Age", "Notes", "School", "Family Created At", "Child Created At"].join(",");
-  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt).isBetween(from, to)).map((family) => {
+  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
     return family.children.data.map((child) => [
       `${family.primaryFirstName.substr(0, 3)}${family.primaryLastName.substr(0, 3)}${family._id.slice(-2)}`.toLowerCase(),
       child.firstName,
@@ -70,8 +72,8 @@ const handler = async (req, res) => {
       `${child.age} ${ageToString[child.ageType]}`,
       `"${child.notes ?? ""}"`,
       child.school,
-      dayjs(family.createdAt).format("MMM DD YYYY"),
-      dayjs(child.createdAt).format("MMM DD YYYY")
+      dayjs(family.createdAt.slice(0, 10)).format("MMM DD YYYY"),
+      dayjs(child.createdAt.slice(0, 10)).format("MMM DD YYYY")
     ].join(",")).join("\n");
   }).join("\n");
   res.setHeader("Content-Type", "text/csv");

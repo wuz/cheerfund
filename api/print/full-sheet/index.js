@@ -59,9 +59,11 @@ const GET_FAMILIES = gql`
 const styleString = (obj) => Object.entries(obj).map(([key, value]) => `${key[0] === "-" ? key : kebabCase(key)}: ${value};`).join("");
 
 const handler = async (req, res) => {
-  const { from = dayjs(), to = dayjs() } = req.query;
+  const { from, to } = req.query;
+  const toDay = dayjs(to).endOf('D');
+  const fromDay = dayjs(from).startOf('D');
   const data = await graphQLClient.request(GET_FAMILIES);
-  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt).isBetween(from, to)).map((family) => {
+  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
     const {
       _id,
       primaryFirstName,

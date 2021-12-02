@@ -58,9 +58,10 @@ const GET_FAMILIES = gql`
 
 const handler = async (req, res) => {
   const { from, to } = req.query;
-  console.log(from, to);
+  const toDay = dayjs(to).endOf('day');
+  const fromDay = dayjs(from).startOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
-  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt).isBetween(from, to)).map((family) => {
+  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
     const { primaryFirstName, primaryLastName } = family;
     return makeLetter(primaryFirstName, primaryLastName);
   }).join("\n");
