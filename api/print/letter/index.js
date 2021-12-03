@@ -64,7 +64,7 @@ const handler = async (req, res) => {
   const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
   const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
-  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).utc().isBetween(fromDay, toDay)).map((family) => {
+  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
     const { primaryFirstName, primaryLastName } = family;
     return makeLetter(primaryFirstName, primaryLastName);
   }).join("\n");

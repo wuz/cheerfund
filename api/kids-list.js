@@ -66,7 +66,7 @@ const handler = async (req, res) => {
   const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
   const headers = ["Key", "First Name", "Last Name", "Gender", "Age", "Notes", "School", "Family Created At", "Child Created At"].join(",");
-  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).utc().isBetween(fromDay, toDay)).map((family) => {
+  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
     return family.children.data.map((child) => [
       `${family.primaryFirstName.substr(0, 3)}${family.primaryLastName.substr(0, 3)}${family._id.slice(-2)}`.toLowerCase(),
       child.firstName,
