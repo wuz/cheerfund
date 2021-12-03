@@ -58,7 +58,7 @@ const GET_FAMILIES = gql`
 const handler = async (req, res) => {
   const { from, to } = req.query;
   const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
-  const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
+  const toDay = dayjs(to, "MM/DD/YYYY").utc().add(1, 'day').startOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
   const headers = ["Key", "Primary First", "Primary Last", "Secondary First", "Secondary Last", "Address", "City", "State", "Zip", "Phone 1", "Phone 2", "Children Count", "Created At"].join(",");
   const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {

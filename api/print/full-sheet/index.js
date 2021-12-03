@@ -63,10 +63,9 @@ const styleString = (obj) => Object.entries(obj).map(([key, value]) => `${key[0]
 const handler = async (req, res) => {
   const { from, to } = req.query;
   const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
-  const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
-  console.log(toDay, fromDay);
+  const toDay = dayjs(to, "MM/DD/YYYY").utc().add(1, 'day').startOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
-  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
+  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt).isBetween(fromDay, toDay)).map((family) => {
     const {
       _id,
       primaryFirstName,

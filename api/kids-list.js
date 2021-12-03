@@ -63,7 +63,7 @@ const genderToString = {
 const handler = async (req, res) => {
   const { from, to } = req.query;
   const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
-  const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
+  const toDay = dayjs(to, "MM/DD/YYYY").utc().add(1, 'day').startOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
   const headers = ["Key", "First Name", "Last Name", "Gender", "Age", "Notes", "School", "Family Created At", "Child Created At"].join(",");
   const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
