@@ -1,7 +1,10 @@
 const { GraphQLClient, gql } = require("graphql-request");
 const dayjs = require("dayjs");
 const isBetween = require('dayjs/plugin/isBetween')
+const utc = require('dayjs/plugin/utc')
+
 dayjs.extend(isBetween);
+dayjs.extend(utc);
 
 const graphQLClient = new GraphQLClient(
   "https://graphql.us.fauna.com/graphql",
@@ -54,11 +57,11 @@ const GET_FAMILIES = gql`
 
 const handler = async (req, res) => {
   const { from, to } = req.query;
-  const toDay = dayjs(to).endOf('day');
-  const fromDay = dayjs(from).startOf('day');
+  const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
+  const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
   const headers = ["Key", "Primary First", "Primary Last", "Secondary First", "Secondary Last", "Address", "City", "State", "Zip", "Phone 1", "Phone 2", "Children Count", "Created At"].join(",");
-  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
+  const rows = data.familiesByDeleted.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).utc().isBetween(fromDay, toDay)).map((family) => {
     return [
       `${family.primaryFirstName.substr(0, 3)}${family.primaryLastName.substr(0, 3)}${family._id.slice(-2)}`.toLowerCase(),
       family.primaryFirstName,
@@ -72,7 +75,7 @@ const handler = async (req, res) => {
       family.phone1,
       family.phone2,
       family.children?.data?.length || 0,
-      dayjs(family.createdAt.slice(0, 10)).format("MMM DD YYYY")
+      dayjs(family.createdAt.slice(0, 10)).utc().format("MMM DD YYYY")
     ].join(",");
   }).join("\n");
   res.setHeader("Content-Type", "text/csv");

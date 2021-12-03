@@ -2,7 +2,10 @@ const makePDF = require("../../../services/pdf").default;
 const { GraphQLClient, gql } = require("graphql-request");
 const dayjs = require("dayjs");
 const isBetween = require('dayjs/plugin/isBetween')
+const utc = require('dayjs/plugin/utc')
+
 dayjs.extend(isBetween);
+dayjs.extend(utc);
 
 const makeLetter = require("../../../services/letter").default;
 
@@ -58,10 +61,10 @@ const GET_FAMILIES = gql`
 
 const handler = async (req, res) => {
   const { from, to } = req.query;
-  const toDay = dayjs(to).endOf('day');
-  const fromDay = dayjs(from).startOf('day');
+  const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
+  const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
-  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
+  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).utc().isBetween(fromDay, toDay)).map((family) => {
     const { primaryFirstName, primaryLastName } = family;
     return makeLetter(primaryFirstName, primaryLastName);
   }).join("\n");

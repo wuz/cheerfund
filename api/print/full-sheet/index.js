@@ -3,8 +3,10 @@ const { GraphQLClient, gql } = require("graphql-request");
 const { kebabCase } = require("lodash");
 const dayjs = require("dayjs");
 const isBetween = require('dayjs/plugin/isBetween')
-dayjs.extend(isBetween);
+const utc = require('dayjs/plugin/utc')
 
+dayjs.extend(isBetween);
+dayjs.extend(utc);
 
 const graphQLClient = new GraphQLClient(
   "https://graphql.us.fauna.com/graphql",
@@ -60,10 +62,10 @@ const styleString = (obj) => Object.entries(obj).map(([key, value]) => `${key[0]
 
 const handler = async (req, res) => {
   const { from, to } = req.query;
-  const toDay = dayjs(to).endOf('D');
-  const fromDay = dayjs(from).startOf('D');
+  const fromDay = dayjs(from, "MM/DD/YYYY").utc().startOf('day');
+  const toDay = dayjs(to, "MM/DD/YYYY").utc().endOf('day');
   const data = await graphQLClient.request(GET_FAMILIES);
-  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).isBetween(fromDay, toDay)).map((family) => {
+  const content = data.allFamilies.data.filter((family) => dayjs(family.createdAt.slice(0, 10)).utc().isBetween(fromDay, toDay)).map((family) => {
     const {
       _id,
       primaryFirstName,
